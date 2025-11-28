@@ -7,6 +7,7 @@
 *                        além da manipulação desses dados.*
 * Data - 23/11/2025                                       * 
 * Autor: Guilherme Rizzo Morais                           *
+* Autor: Iginio Blasotti Frassei                          *
 *---------------------------------------------------------*/
 
 #include <stdio.h>
@@ -716,5 +717,6 @@ void apresentarMenu() {
         }
     }
 }
+
 
 
