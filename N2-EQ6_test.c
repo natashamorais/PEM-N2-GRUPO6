@@ -1,53 +1,20 @@
+/*--------------------------------------------------------*
+* Disciplina: Programaçao Estruturada e Modular           *
+*          Prof. Carlos Veríssimo                         *
+*---------------------------------------------------------*
+* Objetivo do Programa: Testar um sistema academico capaz *
+*                       de armazenar disciplinas e alunos,*
+*                        além da manipulação desses dados.*
+* Data - 26/11/2025                                       * 
+* Autor: Natasha Morais Silva                             *
+*---------------------------------------------------------*/
 #include "unity/unity.h"
-#include <string.h>
+#include "N2-EQ6_func.c"
 
 
 #define NUM_CURSOS 3
 #define TAM_MAX_NOME 50
 
-typedef struct {
-    char nome[TAM_MAX_NOME];
-    int codigoCurso;
-    int codMatricula;
-    float mediaFinal;
-    int notasInformadas;
-    int statusAprovado;
-} Aluno;
-
-typedef struct {
-    char nome[TAM_MAX_NOME];
-    int codigo;
-    float cargaHoraria;
-    Aluno *turma;
-    int contadorAlunos;
-} Disciplina;
-
-typedef struct {
-    char nome[TAM_MAX_NOME];
-    Disciplina *gradeCurricular;
-    int contadorDisciplinas;
-} Curso;
-
-/* --- externs (variáveis globais do seu programa) --- */
-extern Curso cursos[NUM_CURSOS];
-extern char nomeBuffer[50];
-extern float numeroBuffer;
-extern float numeroBuffer2;
-extern float horarioBuffer;
-extern int indexAluno[3];
-
-/* --- protótipos das funções que vamos testar --- */
-extern void inicializarCursos(void);
-extern void liberarEspacoDisciplina(void);
-extern void setDisciplina(int indexCurso);
-extern int certificarCodigoDuplicado(void);
-extern void setAluno(int IndexCurso);
-extern int certificarMatriculaDuplicada(void);
-extern int encontrarAluno(void);
-extern int alocarEspacoDisciplina(int indexCurso); /* opcional, alguns testes chamam setDisciplina */
-extern int alocarEspacoAluno(int indexCurso); /* opcional */
-extern int verificarOverflowNumero(float numero, int tamanhoMin, int tamanhoMax);
-extern int verificarOverflow(char *string, int tamanhoMax);
 
 /* Unity setup/teardown - inicializa e limpa memória entre testes */
 void setUp(void) {
