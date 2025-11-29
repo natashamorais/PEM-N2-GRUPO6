@@ -36,3 +36,17 @@ Executar:
 ```
 ./SistemaAcademico
 ```
+
+3.Testes Unitários 
+
+Compilar:
+
+```
+ gcc N2-EQ6_test.c unity/unity.c -o tests
+```
+
+Executar:
+
+```
+./tests
+```
