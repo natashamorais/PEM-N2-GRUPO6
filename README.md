@@ -28,7 +28,7 @@ Representar estruturas hierárquicas de dados utilizando structs compostas.
 Compilar:
 
 ```
-gcc PEM-ProjetoN2-EQ6.c -o SistemaAcademico
+gcc N2-EQ6_main.c -o SistemaAcademico
 ```
 
 Executar:
