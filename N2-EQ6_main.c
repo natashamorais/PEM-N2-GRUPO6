@@ -20,6 +20,7 @@
 
 
 
+//Função principal
 int main() {
     inicializarCursos();
     apresentarMenu();

@@ -25,7 +25,7 @@ void tearDown(void) {
     liberarEspacoDisciplina();
 }
 
-/* ---------- TESTS ---------- */
+/* Testes */
 
 void test_inicializarCursos_deve_zerar_contadores_e_setar_nomes(void) {
     TEST_ASSERT_EQUAL_INT(0, cursos[0].contadorDisciplinas);
@@ -128,7 +128,7 @@ void test_verificarOverflow_detecta_string_muito_grande(void) {
     TEST_ASSERT_TRUE(overflow != 0);
 }
 
-/* ---------- RUNNER ---------- */
+/* Execução */
 
 int main(void) {
     UNITY_BEGIN();

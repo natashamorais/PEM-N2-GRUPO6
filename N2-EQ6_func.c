@@ -18,6 +18,7 @@
 #define NUM_CURSOS 3
 #define TAM_MAX_TURMA 50
 
+//struct dos alunos
 typedef struct {
     char nome[TAM_MAX_NOME];
     int codigoCurso;
@@ -27,6 +28,7 @@ typedef struct {
     bool statusAprovado;
 } Aluno;
 
+//struct das disciplinas
 typedef struct {
     char nome[TAM_MAX_NOME];
     int codigo;
@@ -35,67 +37,135 @@ typedef struct {
     int contadorAlunos;
 } Disciplina;
 
+//struct dos cursos
 typedef struct {
     char nome[TAM_MAX_NOME];
     Disciplina *gradeCurricular;
     int contadorDisciplinas;
 } Curso;
 
+//Variável global
 Curso cursos[NUM_CURSOS];
 
+//Variáveis para a leitura de entradas
 int resposta = 1;
 bool resultadoInput;
-char nomeBuffer[50];
-float numeroBuffer;
-float numeroBuffer2;
-float horarioBuffer;
-int indexAluno[3];
-int indexDisciplina[2];
+char nomeBuffer[50];    //Armazena temporariamente o nome digitado
+float numeroBuffer;     //Entrada genérica para os numeros
+float numeroBuffer2;    
+float horarioBuffer;    //Usado para a carga horária
+int indexAluno[3];      //Armazena a localização do aluno 
+int indexDisciplina[2]; //Armazena a localização para disciplinas
 
+/*Função responsável por adicionar espaço para uma nova disciplina
+Se for a primeira vez usa malloc, se não, realloc*/
 void alocarEspacoDisciplina(int indexCurso);
+
+/*Adiciona 1 aluno em todas as disciplinas de um curso, 
+usa malloc ou realloc dependendo se já ha alunos*/
 void alocarEspacoAluno(int indexCurso);
+
+//Libera os espaços de memória
 void liberarEspacoDisciplina();
 
+//Exibe mensagens de erro com cores vermelhas
 void exibirMensagem(char *mensagem);
+
+//Verifica se o usuário digitou apenas espaços
 bool saoApenasEspacosVazios(char *string, int tamanho);
+
+//Verifica o caso de overflow (digitou uma string maior que a permitida)
 bool verificarOverflow(char *string, int tamanhoMax);
+
+//Verifica o caso de overflow só que dessa vez em numeros
 bool verificarOverflowNumero(float numero, int tamanhoMin, int tamanhoMax);
+
+//Zera as disciplinas e define os nomes dos cursos
 void inicializarCursos();
+
+//Suspende a execução
 void suspenderExecucao();
 
+/*Usuário escolhe um curso, há uma verificação se não existem alunos
+recebe o nome, código e carga horária e chama o SETDISCIPLINA para salvar*/
 void cadastrarDisciplinas();
+
+//Lê um nome e remove o \n no final, além de validar espaços vazios e tamanho 
 bool receberNome(char *mensagemInicial);
+
+//Lê o código da disciplina e verifica se há duplicidade
 bool receberCodigo();
+
+//Evita adicionar disciplinas se já tem alunos no curso
 bool verificarAlunosCadastrados(int indexCurso);
+
+//Recebe um número de 0 à 1000 como carga horária
 bool receberCargaHrDisciplina();
+
+//Percorre todos os cursos e disciplinas verificando se o código já foi utilizado
 bool certificarCodigoDuplicado();
+
+/*Insere os dados da disciplina cadastrada
+Inicializa o contador de alunos e ponteiro*/
 void setDisciplina(int indexCurso);
+
+//Verifica se o curso possui pelo menos uma disciplina cadastrada
 bool encontrarDisciplinas(int indexCurso);
 
+/*Usuário escolhe um curso, verifica se o curso já tem disciplinas
+Recebe o nome + matrícula */
 void cadastarAluno();
+
+//Recebe matricula (valor de 1 à 1000)
 bool receberCodigoMatricula();
+
+/*Aloca espaço para o aluno em todas as disciplinas 
+do curso e copia nome e matrícula*/
 void setAluno(int IndexCurso);
+
+/*Percorre todos os cursos, disciplinas e alunos 
+procurando se há um numero pré-existente*/
 bool certificarMatriculaDuplicada();
 
-
+//Recebe matrícula ou zero para voltar
 bool receberCodigoMatriculaConsulta();
+
+//Busca o aluno pelo número de matrícula
 bool encontrarAluno();
+
+//Insere as notas
 void inserirNotas();
 
+/*Encontra o aluno e exibe o nome, matrícula e o curso.
+Mostra a média e o status para cada disciplina*/
 void gerarBoletim();
 
+//Recebe código da disciplina e chama a função "CONSULTARAPROVADOSDISCIPLINA"
 void listarAlunosAproRepro();
+
+//Mostra as disciplinas
 void listarDisciplinas();
+
+//Receve o código da consulta
 bool receberCodigoConsulta();
+
+/*Procura a disciplina pelo código, mostra nome do aluno,
+mostra se está aprovado ou reprovado, se as notas não foram
+informadas mostra como pendente*/
 void consultarAprovadosDisciplina();
 
+//Lê uma resposta numérica e valida se está dentro do intervalo 
 bool receberResposta(int numeroMaxOpcoes);
+
+/*LOOP infinito, Exibe opções, recebe resposta validada e direciona
+para a função correspondente*/
 void apresentarMenu();
 
 
-
-
 /*--------------------> CONTAINER DE ALOCAÇÃO DE MEMORIA*/
+
+/*Função responsável por adicionar espaço para uma nova disciplina
+Se for a primeira vez usa malloc, se não, realloc*/
 void alocarEspacoDisciplina(int indexCurso) {
     if(cursos[indexCurso].contadorDisciplinas == 0) {
         cursos[indexCurso].gradeCurricular = malloc(sizeof(Disciplina));
@@ -109,7 +179,8 @@ void alocarEspacoDisciplina(int indexCurso) {
         );
     }
 }
-
+/*Adiciona 1 aluno em todas as disciplinas de um curso, 
+usa malloc ou realloc dependendo se já ha alunos*/
 void alocarEspacoAluno(int indexCurso) {
     if(cursos[indexCurso].contadorDisciplinas == 0) {
         return;
@@ -130,7 +201,7 @@ void alocarEspacoAluno(int indexCurso) {
         }
     }
 }
-
+//Libera os espaços de memória
 void liberarEspacoDisciplina() {
     for(int i = 0; i < NUM_CURSOS; i++) {
         for(int j = 0; j < cursos[i].contadorDisciplinas; j++) {
@@ -141,10 +212,11 @@ void liberarEspacoDisciplina() {
 }
 
 /*--------------------> CONTAINER DE VALIDAÇÃO DE INPUT - GERAL*/
+//Exibe mensagens de erro com cores vermelhas
 void exibirMensagem(char *mensagem) {
     printf("\n\n \033[1;31m===> Erro. %s.\033[0m\n\n", mensagem);
 }
-
+//Verifica se o usuário digitou apenas espaços
 bool saoApenasEspacosVazios(char *string, int tamanho) {
     int somador = 0;
     for(int i = 0; string[i] != '\0'; i++) {
@@ -159,7 +231,7 @@ bool saoApenasEspacosVazios(char *string, int tamanho) {
     }
     else return false;
 }
-
+//Verifica o caso de overflow (digitou uma string maior que a permitida)
 bool verificarOverflow(char *string, int tamanhoMax) {
     int somador = 0;
     for(int i = 0; *(string + i) != '\0'; i++) {
@@ -173,7 +245,7 @@ bool verificarOverflow(char *string, int tamanhoMax) {
     }
     else return false;
 }
-
+//Verifica o caso de overflow só que dessa vez em numeros
 bool verificarOverflowNumero(float numero, int tamanhoMin, int tamanhoMax) {
     if((numero < tamanhoMin) || (numero > tamanhoMax)) {
         exibirMensagem("Esse numero nao pode ser usado");
@@ -181,14 +253,14 @@ bool verificarOverflowNumero(float numero, int tamanhoMin, int tamanhoMax) {
     }
     else return false;
 }
-
+//Suspende a execução
 void suspenderExecucao() {
     printf("\n| Pressione qualquer tecla para continuar\n");
     getchar();
 }
 
 /*--------------------> CONTAINER DE FUNÇOES PARA INPUT - GERAL */
-
+//Lê um nome e remove o \n no final, além de validar espaços vazios e tamanho 
 bool receberNome(char *mensagemInicial) {
     printf("%s\n", mensagemInicial);
     fgets(&nomeBuffer[0], sizeof(nomeBuffer), stdin);
@@ -198,7 +270,7 @@ bool receberNome(char *mensagemInicial) {
     }
     else return true;
 }
-
+//Lê o código da disciplina e verifica se há duplicidade
 bool receberCodigo() {
     printf("\nDigite o codigo da disciplina(o codigo varia de 0 a 100): \n");
     scanf("%f", &numeroBuffer);
@@ -216,7 +288,7 @@ bool receberCodigo() {
 }
 
 /*--------------------> CONTAINER DE DISCIPLINAS */
-
+//Zera as disciplinas e define os nomes dos cursos
 void inicializarCursos() {
     for(int i = 0; i < NUM_CURSOS; i++) {
         cursos[i].gradeCurricular = NULL;
@@ -226,7 +298,8 @@ void inicializarCursos() {
     strcpy(cursos[1].nome, "Ciencias Economicas");
     strcpy(cursos[2].nome, "Arquitetura e Urbanismo");
 }
-
+/*Usuário escolhe um curso, há uma verificação se não existem alunos
+recebe o nome, código e carga horária e chama o SETDISCIPLINA para salvar*/
 void cadastrarDisciplinas() {
     int cursoIndex;
     printf("\n\n===>> CADASTRO DE DISCIPLINAS\nSelecione um curso para adicionar a disciplina ou selecione 0 para retornar ao menu principal:\n\n");
@@ -262,7 +335,7 @@ void cadastrarDisciplinas() {
 
     setDisciplina(cursoIndex);
 }
-
+//Recebe um número de 0 à 1000 como carga horária
 bool receberCargaHrDisciplina() {
     printf("\nDigite a carga horaria da disciplina:\n(Em horas. Nao e necessario adicionar sufixos para indicar horas e minutos) \n");
     scanf("%f", &horarioBuffer);
@@ -273,7 +346,8 @@ bool receberCargaHrDisciplina() {
     else return true;
 
 }
-
+/*Insere os dados da disciplina cadastrada
+Inicializa o contador de alunos e ponteiro*/
 void setDisciplina(int indexCurso) {
     alocarEspacoDisciplina(indexCurso);
     int indexGradeCurricular = (cursos[indexCurso].contadorDisciplinas) - 1;
@@ -285,7 +359,7 @@ void setDisciplina(int indexCurso) {
     cursos[indexCurso].gradeCurricular[indexGradeCurricular].turma = NULL;
     printf("\n===> A Disciplina: %s foi adicionada com sucesso.\n", nomeBuffer);
 }
-
+//Percorre todos os cursos e disciplinas verificando se o código já foi utilizado
 bool certificarCodigoDuplicado() {
     int i = 0;
     int j = 0;
@@ -308,7 +382,7 @@ bool certificarCodigoDuplicado() {
     }
     else return false;
 }
-
+//Verifica se o curso possui pelo menos uma disciplina cadastrada
 bool encontrarDisciplinas(int indexCurso) {
     if(cursos[indexCurso].contadorDisciplinas > 0) {
         return true;
@@ -320,7 +394,8 @@ bool encontrarDisciplinas(int indexCurso) {
 }
 
 /*--------------------> CONTAINER DO ALUNO*/
-
+/*Usuário escolhe um curso, verifica se o curso já tem disciplinas
+Recebe o nome + matrícula */
 void cadastarAluno() {
     int cursoIndex;
     printf("\n\n===>> CADASTRO DE ALUNO\nSelecione o curso em que esta cadastrado ou selecione 0 para retornar ao menu principal:\n\n");
@@ -353,7 +428,7 @@ void cadastarAluno() {
 
     setAluno(cursoIndex);
 }
-
+//Recebe matricula (valor de 1 à 1000)
 bool receberCodigoMatricula() {
     printf("\nDigite o numero de matricula do aluno(o numero varia de 1 a 1000):\n");
     scanf("%f", &numeroBuffer);
@@ -369,7 +444,8 @@ bool receberCodigoMatricula() {
         else return true;
     }
 }
-
+/*Aloca espaço para o aluno em todas as disciplinas 
+do curso e copia nome e matrícula*/
 void setAluno(int IndexCurso) {
     alocarEspacoAluno(IndexCurso);
     for(int i = 0; i < cursos[IndexCurso].contadorDisciplinas; i++) {
@@ -380,7 +456,8 @@ void setAluno(int IndexCurso) {
     }
     printf("\n===> O(A) aluno(a): %s foi cadastrado(a) com sucesso em %s.", nomeBuffer, cursos[IndexCurso].nome);
 }
-
+/*Percorre todos os cursos, disciplinas e alunos 
+procurando se há um numero pré-existente*/
 bool certificarMatriculaDuplicada() {
     int i = 0;
     int j = 0;
@@ -404,7 +481,7 @@ bool certificarMatriculaDuplicada() {
     }
     else return false;
 }
-
+//Evita adicionar disciplinas se já tem alunos no curso
 bool verificarAlunosCadastrados(int indexCurso) {
     int j = 0;
     bool sentinela = false;
@@ -424,7 +501,7 @@ bool verificarAlunosCadastrados(int indexCurso) {
 }
 
 /*--------------------> CONTAINER DE NOTAS */
-
+//Insere as notas
 void inserirNotas() {
     printf("\n\n===>> INSERCAO DE NOTAS");
     resultadoInput = false;
@@ -469,7 +546,7 @@ void inserirNotas() {
 
     printf("\n===>> As notas foram registradas com sucesso. Status de aprovacao do(a) aluno(a) disponivel.\n");
 }
-
+//Recebe matrícula ou zero para voltar
 bool receberCodigoMatriculaConsulta() {
     printf("\nDigite o numero de matricula do aluno ou selecione 0 para retornar ao menu principal:\n");
     scanf("%f", &numeroBuffer);
@@ -481,7 +558,7 @@ bool receberCodigoMatriculaConsulta() {
         return true;
     }
 }
-
+//Busca o aluno pelo número de matrícula
 bool encontrarAluno() {
     int i = 0;
     int j = 0;
@@ -518,7 +595,8 @@ bool encontrarAluno() {
 }
 
 /*--------------------> CONTAINER DE GERAÇÃO DE BOLETIM */
-
+/*Encontra o aluno e exibe o nome, matrícula e o curso.
+Mostra a média e o status para cada disciplina*/
 void gerarBoletim() {
     printf("\n\n===>> GERAR BOLETIM");
     resultadoInput = false;
@@ -578,7 +656,7 @@ void gerarBoletim() {
 }
 
 /*--------------------> CONTAINER DE LISTAGEM */
-
+//Recebe código da disciplina e chama a função "CONSULTARAPROVADOSDISCIPLINA"
 void listarAlunosAproRepro() {
     printf("\n\n===>> LISTAGEM DE APROVADOS E REPROVADOS");
     resultadoInput = false;
@@ -589,7 +667,7 @@ void listarAlunosAproRepro() {
     consultarAprovadosDisciplina();
     suspenderExecucao();
 }
-
+//Receve o código da consulta
 bool receberCodigoConsulta() {
     printf("\nDigite o codigo da disciplina ou selecione 0 para retornar ao menu principal:");
     scanf("%f", &numeroBuffer);
@@ -599,7 +677,9 @@ bool receberCodigoConsulta() {
     }
     else return true;
 }
-
+/*Procura a disciplina pelo código, mostra nome do aluno,
+mostra se está aprovado ou reprovado, se as notas não foram
+informadas mostra como pendente*/
 void consultarAprovadosDisciplina() {
     int i = 0;
     int j = 0;
@@ -649,7 +729,7 @@ void consultarAprovadosDisciplina() {
 
 
 /*--------------------> CONTAINER DO FLUXO PRINCIPAL */
-
+//Lê uma resposta numérica e valida se está dentro do intervalo 
 bool receberResposta(int numeroMaxOpcoes) {
     if((scanf("%d", &resposta) != 1)) {
         while(getchar() != '\n');
@@ -661,7 +741,7 @@ bool receberResposta(int numeroMaxOpcoes) {
         return true;
     }
 }
-
+//Mostra as regras do código 
 void apresentarRegras() {
     printf("\n\n===>> REGRAS DE USO\n");
     printf("- Disciplinas nao podem ter codigos iguais.\n");
@@ -671,7 +751,8 @@ void apresentarRegras() {
     printf("Dessa forma, busque sempre cadastrar alunos depois de adicionado todas as disciplinas ao curso\n\n");
     suspenderExecucao();
 }
-
+/*LOOP infinito, Exibe opções, recebe resposta validada e direciona
+para a função correspondente*/
 void apresentarMenu() {
     while(resposta != -1) {
         resultadoInput = false;
@@ -713,5 +794,7 @@ void apresentarMenu() {
         }
     }
 }
+
+
 
 
